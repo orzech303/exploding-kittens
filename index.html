@@ -267,6 +267,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
 <body>
 <div id="app">
 
+<!-- LANDING -->
 <div id="sl" class="screen active">
   <div class="logo-emoji">💣</div>
   <h1 class="logo-title">Eksplodujące<br>Kotki</h1>
@@ -283,6 +284,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
   </div>
 </div>
 
+<!-- HOST SETUP -->
 <div id="shs" class="screen">
   <div class="setup-box">
     <h2 class="bf">🖥️ Nowy Stół</h2>
@@ -296,6 +298,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
   </div>
 </div>
 
+<!-- JOIN -->
 <div id="sjoin" class="screen">
   <div class="setup-box">
     <h2 class="bf" style="color:var(--neon);">📱 Dołącz</h2>
@@ -312,6 +315,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
   </div>
 </div>
 
+<!-- PREGAME (Host) -->
 <div id="spg" class="screen">
   <div class="pregame-card">
     <h2>🎴 Poczekalnia</h2>
@@ -338,6 +342,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
   </div>
 </div>
 
+<!-- LOBBY (Client waiting) -->
 <div id="slb" class="screen">
   <div style="font-size:3rem;">🐱</div>
   <h2 class="lobby-title">Czekaj na start</h2>
@@ -346,6 +351,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
   <div id="lb-players" style="display:flex;flex-direction:column;gap:7px;width:100%;max-width:280px;margin-top:10px;"></div>
 </div>
 
+<!-- HOST GAME SCREEN -->
 <div id="sh" class="screen">
   <div class="hg-header">
     <div class="hg-title">💣 Eksplodujące Kotki — Stół</div>
@@ -356,7 +362,9 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
   </div>
 
   <div class="hg-body">
+    <!-- LEFT -->
     <div class="hg-left">
+      <!-- QR/code panel -->
       <div class="panel">
         <div class="panel-title">📱 Dołącz</div>
         <div style="display:flex;align-items:center;gap:12px;">
@@ -369,13 +377,16 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
         </div>
       </div>
 
+      <!-- Players panel -->
       <div class="panel" style="flex:1;overflow-y:auto;">
         <div class="panel-title">👥 Gracze (<span id="h-alive">0</span> żywych)</div>
         <div id="h-pl-list" class="pl-list"></div>
       </div>
     </div>
 
+    <!-- RIGHT -->
     <div class="hg-right">
+      <!-- Status bar -->
       <div class="panel">
         <div class="status-bar">
           <div class="stat"><span class="stat-lbl">🃏 Talia:</span><span class="stat-val" id="h-deck-cnt">–</span></div>
@@ -385,6 +396,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
         </div>
       </div>
 
+      <!-- Deck visual -->
       <div class="panel">
         <div class="panel-title">🎴 Stół</div>
         <div class="deck-area">
@@ -400,11 +412,13 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
         </div>
       </div>
 
+      <!-- Last action -->
       <div class="panel">
         <div class="panel-title">🎬 Ostatnia akcja</div>
         <div class="last-action" id="h-last-action"><span style="color:var(--muted);">Gra trwa...</span></div>
       </div>
 
+      <!-- Log -->
       <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;border-bottom:1.5px solid var(--border);">
         <div class="panel" style="border-bottom:0;padding-bottom:6px;"><div class="panel-title" style="margin:0;">📜 Historia</div></div>
         <div id="h-log" class="game-log"></div>
@@ -413,6 +427,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
   </div>
 </div>
 
+<!-- CLIENT GAME SCREEN -->
 <div id="sc" class="screen">
   <div class="cg-header">
     <div>
@@ -451,7 +466,9 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
   </div>
 </div>
 
-</div><div class="nc" id="nc"></div>
+</div><!-- #app -->
+
+<div class="nc" id="nc"></div>
 
 <script>
 // ================================================================
@@ -601,7 +618,6 @@ function startHost(){
 function showPregame(){
   goScreen('spg');
   document.getElementById('pg-room-id').textContent=roomId;
-  // Generowanie kodu QR zawierającego bezpośredni odnośnik do pokoju na Twojej domenie GitHub Pages
   generateQR('pg-qr', 'https://orzech303.github.io/exploding-kittens/?join=' + roomId, 140);
   updatePregame();
 }
@@ -689,7 +705,6 @@ function startGame(){
   G.players.forEach(p=>sendTo(p.id,{type:'GAME_START',yourHand:p.hand,gameInfo:mkInfo(p.id)}));
   goScreen('sh');
   document.getElementById('h-room-id').textContent=roomId;
-  // Generowanie kodu QR dla nagłówka aktywnej rozgrywki na stronie Hosta
   generateQR('h-qr', 'https://orzech303.github.io/exploding-kittens/?join=' + roomId, 90);
   renderHost();
 }
@@ -731,7 +746,7 @@ function bcastState(){
 function curP(){return G.players[G.currentPlayerIndex]}
 function isCurP(id){return curP()?.id===id}
 
-function hPlayCard(conn,data){
+ hPlayCard(conn,data){
   const p=G.players.find(x=>x.peerId===conn.peer);
   if(!p||p.eliminated)return;
   if(!isCurP(p.id)){conn.send({type:'ERR',msg:'Nie twoja tura!'});return}
@@ -761,6 +776,10 @@ function hPlayCard(conn,data){
 
   // SINGLE CARD
   const card=cards[0];
+  if (isCat(card.type)) {
+    conn.send({type:'ERR',msg:'Karty kotów bez właściwości wymagają pary!'});return;
+  }
+
   p.hand.splice(cardIndices[0],1);
   G.discard.push(card);
   execCard(p,card,targetPlayerId,conn);
@@ -886,7 +905,7 @@ function hDrawCard(conn){
 }
 
 // ================================================================
-//  HOST: DEFUSE PLACEMENT
+//  HOST: DEFUSE PLAYMENT
 // ================================================================
 function hDefusePlace(conn,data){
   const p=G.players.find(x=>x.peerId===conn.peer);
@@ -1128,18 +1147,38 @@ function renderClient(){
     }).join('');
   }
 
-  // Hints
+  // Hints & Play Button Validation
   const sh=document.getElementById('c-sel-hint');
   sh.textContent=selIdx.length?selIdx.length+' zaznaczono':'';
   const hh=document.getElementById('c-hand-hint');
-  if(selIdx.length===2) hh.textContent='Para gotowa! Kliknij Zagraj, by ukraść kartę.';
-  else if(selIdx.length===1) hh.textContent='Kliknij Zagraj lub wybierz drugą identyczną kartę kota (para).';
-  else hh.textContent='Dotknij karty, by ją zaznaczyć.';
+  
+  const canAct = isMyTurn && !isDead && !isEnded;
+  let playDisabled = !canAct || selIdx.length === 0;
 
-  // Buttons
-  const canAct=isMyTurn&&!isDead&&!isEnded;
+  if(selIdx.length===2) {
+    const card1 = cHand[selIdx[0]];
+    const card2 = cHand[selIdx[1]];
+    if (isCat(card1.type) && card1.type === card2.type) {
+      hh.textContent = 'Para gotowa! Kliknij Zagraj, by ukraść kartę.';
+    } else {
+      hh.textContent = 'Wybrane karty nie tworzą pary identycznych kotów!';
+      playDisabled = true;
+    }
+  } else if(selIdx.length===1) {
+    const card = cHand[selIdx[0]];
+    if (isCat(card.type)) {
+      hh.textContent = 'Ta karta nie ma efektu. Musisz dobrać do niej PARĘ, by zagrać!';[cite: 1]
+      playDisabled = true; // Blokada zagrywania pojedynczego kota
+    } else {
+      hh.textContent = 'Kliknij Zagraj, aby użyć tej karty.';
+    }
+  } else {
+    hh.textContent = 'Dotknij karty, by ją zaznaczyć.';
+  }
+
+  // Buttons state update
   document.getElementById('btn-draw').disabled=!canAct;
-  document.getElementById('btn-play').disabled=!canAct||selIdx.length===0;
+  document.getElementById('btn-play').disabled=playDisabled;
 }
 
 function toggleSel(i){
@@ -1164,6 +1203,12 @@ function toggleSel(i){
 // ================================================================
 //  CLIENT: ACTIONS
 // ================================================================
+function clientDraw() {
+  if (cConn && cConn.open) {
+    cConn.send({ type: 'DRAW_CARD' });
+  }
+}
+
 function clientPlayCards(){
   if(!selIdx.length||!cConn)return;
   const cards=selIdx.map(i=>cHand[i]);
@@ -1314,7 +1359,7 @@ function showLossModal(winner){
 }
 
 // ================================================================
-//  CARD TOOLTIP (hover on desktop, long-press on mobile)
+//  CARD TOOLTIP
 // ================================================================
 let tipTimer=null;
 function showCardTip(el,type){
@@ -1341,7 +1386,7 @@ function touchTipEnd(el){
 }
 
 // ================================================================
-//  URL PARAM (auto-fill room code)
+//  URL PARAM
 // ================================================================
 window.addEventListener('DOMContentLoaded',()=>{
   const p=new URLSearchParams(location.search);
