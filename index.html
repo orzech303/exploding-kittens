@@ -75,7 +75,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
 .room-id-value{font-family:monospace;font-size:1.4rem;font-weight:900;color:var(--neon);letter-spacing:4px}
 .qr-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;margin:10px 0}
 .qr-inner{background:#fff;padding:10px;border-radius:10px;display:inline-flex}
-.qr-hint{font-size:.7rem;color:var(--muted);text-align:center;max-width:280px}
+.qr-hint{font-size:.7rem;color:var(--muted);text-align:center;max-width:200px}
 .pregame-pl-list{display:flex;flex-direction:column;gap:7px;margin:10px 0}
 .pregame-pl{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--rsm)}
 .av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;flex-shrink:0}
@@ -202,7 +202,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
 
 /* ACTION BAR */
 .action-bar{padding:12px 14px;background:var(--surface);border-top:1.5px solid var(--border);display:flex;gap:10px;flex-shrink:0}
-.btn-draw{flex:1;padding:15px;background:linear-gradient(135deg,var(--accent),#c9003a);color:#fff;font-size:.95rem;font-weight:800;font-family:'Nunito',sans-serif;border:none;border-radius:var(--r);cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:7px;box-shadow:0 4px 166px rgba(255,64,96,.35)}
+.btn-draw{flex:1;padding:15px;background:linear-gradient(135deg,var(--accent),#c9003a);color:#fff;font-size:.95rem;font-weight:800;font-family:'Nunito',sans-serif;border:none;border-radius:var(--r);cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:7px;box-shadow:0 4px 16px rgba(255,64,96,.35)}
 .btn-draw:active{transform:scale(.96)}
 .btn-draw:disabled{opacity:.35;cursor:not-allowed;transform:none}
 .btn-play{flex:1;padding:15px;background:linear-gradient(135deg,var(--neon),#00a88c);color:#001a15;font-size:.95rem;font-weight:800;font-family:'Nunito',sans-serif;border:none;border-radius:var(--r);cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:7px;box-shadow:0 4px 16px rgba(0,237,200,.25)}
@@ -267,6 +267,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
 <body>
 <div id="app">
 
+<!-- LANDING -->
 <div id="sl" class="screen active">
   <div class="logo-emoji">💣</div>
   <h1 class="logo-title">Eksplodujące<br>Kotki</h1>
@@ -277,12 +278,13 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
   </div>
   <div id="share-box" class="share-box" style="margin-top:8px;">
     <h3>📡 Jak grać na telefonach?</h3>
-    <div class="share-step"><span class="num">1</span><span>Host tworzy grę, klikając przycisk powyżej.</span></div>
-    <div class="share-step"><span class="num">2</span><span>Na ekranie poczekalni wyświetli się specjalny kod QR.</span></div>
-    <div class="share-step"><span class="num">3</span><span>Inni gracze skanują kod swoimi smartfonami i dołączają natychmiast bez przepisywania kodu!</span></div>
+    <div class="share-step"><span class="num">1</span><span>Host tworzy serwer: CMD → cd na <strong>folder z plikiem</strong> → <br>python3 -m http.server 8080</span></div>
+    <div class="share-step"><span class="num">2</span><span>Host otwiera <strong>http://192.168.100.9:8080/exploding-kittens.html</strong> (lokalny IP komputera w sieci) i tworzy pokój</span></div>
+    <div class="share-step"><span class="num">3</span><span>Gracze na telefonach otwierają <strong>ten sam link</strong> i wpisują kod pokoju.</span></div>
   </div>
 </div>
 
+<!-- HOST SETUP -->
 <div id="shs" class="screen">
   <div class="setup-box">
     <h2 class="bf">🖥️ Nowy Stół</h2>
@@ -296,6 +298,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
   </div>
 </div>
 
+<!-- JOIN -->
 <div id="sjoin" class="screen">
   <div class="setup-box">
     <h2 class="bf" style="color:var(--neon);">📱 Dołącz</h2>
@@ -312,10 +315,11 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
   </div>
 </div>
 
+<!-- PREGAME (Host) -->
 <div id="spg" class="screen">
   <div class="pregame-card">
     <h2>🎴 Poczekalnia</h2>
-    <p style="text-align:center;font-size:.78rem;color:var(--muted);margin-bottom:6px;">Zeskanuj kod telefonem lub wpisz kod pokoju</p>
+    <p style="text-align:center;font-size:.78rem;color:var(--muted);margin-bottom:6px;">Gracze wpisują kod pokoju w swoich telefonach</p>
 
     <div class="room-id-box">
       <div class="room-id-label">Kod pokoju</div>
@@ -324,7 +328,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
 
     <div class="qr-wrap">
       <div class="qr-inner" id="pg-qr"></div>
-      <div class="qr-hint">Zeskanuj telefonem, aby dołączyć automatycznie przez <strong style="color: var(--neon)">orzech303.github.io</strong></div>
+      <div class="qr-hint">QR zawiera tylko kod pokoju — gracze muszą mieć otwartą tę stronę</div>
     </div>
 
     <div style="margin:10px 0;">
@@ -338,6 +342,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
   </div>
 </div>
 
+<!-- LOBBY (Client waiting) -->
 <div id="slb" class="screen">
   <div style="font-size:3rem;">🐱</div>
   <h2 class="lobby-title">Czekaj na start</h2>
@@ -346,6 +351,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
   <div id="lb-players" style="display:flex;flex-direction:column;gap:7px;width:100%;max-width:280px;margin-top:10px;"></div>
 </div>
 
+<!-- HOST GAME SCREEN -->
 <div id="sh" class="screen">
   <div class="hg-header">
     <div class="hg-title">💣 Eksplodujące Kotki — Stół</div>
@@ -356,7 +362,9 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
   </div>
 
   <div class="hg-body">
+    <!-- LEFT -->
     <div class="hg-left">
+      <!-- QR/code panel -->
       <div class="panel">
         <div class="panel-title">📱 Dołącz</div>
         <div style="display:flex;align-items:center;gap:12px;">
@@ -364,18 +372,21 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
           <div>
             <div class="lbl" style="margin-bottom:2px;">Kod pokoju</div>
             <div style="font-family:monospace;font-size:1.1rem;font-weight:900;color:var(--neon);letter-spacing:3px;" id="h-room-id">–</div>
-            <div style="font-size:.65rem;color:var(--muted);margin-top:4px;">Zeskanuj kod QR, aby dołączyć błyskawicznie</div>
+            <div style="font-size:.65rem;color:var(--muted);margin-top:4px;">Gracze wpisują ten kod</div>
           </div>
         </div>
       </div>
 
+      <!-- Players panel -->
       <div class="panel" style="flex:1;overflow-y:auto;">
         <div class="panel-title">👥 Gracze (<span id="h-alive">0</span> żywych)</div>
         <div id="h-pl-list" class="pl-list"></div>
       </div>
     </div>
 
+    <!-- RIGHT -->
     <div class="hg-right">
+      <!-- Status bar -->
       <div class="panel">
         <div class="status-bar">
           <div class="stat"><span class="stat-lbl">🃏 Talia:</span><span class="stat-val" id="h-deck-cnt">–</span></div>
@@ -385,6 +396,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
         </div>
       </div>
 
+      <!-- Deck visual -->
       <div class="panel">
         <div class="panel-title">🎴 Stół</div>
         <div class="deck-area">
@@ -400,11 +412,13 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
         </div>
       </div>
 
+      <!-- Last action -->
       <div class="panel">
         <div class="panel-title">🎬 Ostatnia akcja</div>
         <div class="last-action" id="h-last-action"><span style="color:var(--muted);">Gra trwa...</span></div>
       </div>
 
+      <!-- Log -->
       <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;border-bottom:1.5px solid var(--border);">
         <div class="panel" style="border-bottom:0;padding-bottom:6px;"><div class="panel-title" style="margin:0;">📜 Historia</div></div>
         <div id="h-log" class="game-log"></div>
@@ -413,6 +427,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
   </div>
 </div>
 
+<!-- CLIENT GAME SCREEN -->
 <div id="sc" class="screen">
   <div class="cg-header">
     <div>
@@ -451,7 +466,9 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
   </div>
 </div>
 
-</div><div class="nc" id="nc"></div>
+</div><!-- #app -->
+
+<div class="nc" id="nc"></div>
 
 <script>
 // ================================================================
@@ -601,8 +618,7 @@ function startHost(){
 function showPregame(){
   goScreen('spg');
   document.getElementById('pg-room-id').textContent=roomId;
-  // Generowanie kodu QR zawierającego bezpośredni odnośnik do pokoju na Twojej domenie GitHub Pages
-  generateQR('pg-qr', 'https://orzech303.github.io/exploding-kittens/?join=' + roomId, 140);
+  generateQR('pg-qr',roomId,140);
   updatePregame();
 }
 
@@ -689,8 +705,7 @@ function startGame(){
   G.players.forEach(p=>sendTo(p.id,{type:'GAME_START',yourHand:p.hand,gameInfo:mkInfo(p.id)}));
   goScreen('sh');
   document.getElementById('h-room-id').textContent=roomId;
-  // Generowanie kodu QR dla nagłówka aktywnej rozgrywki na stronie Hosta
-  generateQR('h-qr', 'https://orzech303.github.io/exploding-kittens/?join=' + roomId, 90);
+  generateQR('h-qr',roomId,90);
   renderHost();
 }
 
@@ -1188,6 +1203,11 @@ function clientPlayCards(){
 
   cConn.send({type:'PLAY_CARD',cardIndices:selIdx});
   selIdx=[];renderClient();
+}
+
+function clientDraw(){
+  if(!cConn)return;
+  cConn.send({type:'DRAW_CARD'});
 }
 
 // ================================================================
