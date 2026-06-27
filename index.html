@@ -746,7 +746,7 @@ function bcastState(){
 function curP(){return G.players[G.currentPlayerIndex]}
 function isCurP(id){return curP()?.id===id}
 
- hPlayCard(conn,data){
+function hPlayCard(conn,data){
   const p=G.players.find(x=>x.peerId===conn.peer);
   if(!p||p.eliminated)return;
   if(!isCurP(p.id)){conn.send({type:'ERR',msg:'Nie twoja tura!'});return}
@@ -1167,7 +1167,7 @@ function renderClient(){
   } else if(selIdx.length===1) {
     const card = cHand[selIdx[0]];
     if (isCat(card.type)) {
-      hh.textContent = 'Ta karta nie ma efektu. Musisz dobrać do niej PARĘ, by zagrać!';[cite: 1]
+      hh.textContent = 'Ta karta nie ma efektu. Musisz dobrać do niej PARĘ, by zagrać!';
       playDisabled = true; // Blokada zagrywania pojedynczego kota
     } else {
       hh.textContent = 'Kliknij Zagraj, aby użyć tej karty.';
