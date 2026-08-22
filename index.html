@@ -260,6 +260,25 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* ======================== COPY LINK BOX ======================== */
+.copy-link-box {
+  display: flex; align-items: center; gap: 8px; margin-top: 8px;
+  background: var(--surface2); border: 1.5px solid var(--border);
+  border-radius: var(--rsm); padding: 6px 10px; width: 100%; max-width: 300px;
+}
+.copy-link-input {
+  flex: 1; background: transparent; border: none; color: var(--text);
+  font-family: monospace; font-size: .75rem; outline: none; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap;
+}
+.btn-copy {
+  background: var(--surface3); border: none; color: var(--text);
+  border-radius: 6px; padding: 5px 10px; font-size: .75rem; cursor: pointer;
+  transition: all 0.2s; font-weight: bold; font-family: 'Nunito', sans-serif;
+}
+.btn-copy:hover { background: var(--neon); color: #000; }
+.btn-copy:active { transform: scale(0.95); }
 </style>
 </head>
 <body>
@@ -326,7 +345,11 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
 
     <div class="qr-wrap">
       <div class="qr-inner" id="pg-qr"></div>
-      <div class="qr-hint">Zeskanuj telefonem, aby dołączyć automatycznie przez <strong style="color: var(--neon)">orzech303.github.io</strong></div>
+      <div class="qr-hint">Zeskanuj telefonem, aby dołączyć automatycznie</div>
+      <div class="copy-link-box">
+        <input type="text" class="copy-link-input" id="pg-link-val" readonly>
+        <button class="btn-copy" onclick="copyJoinLink('pg-link-val')">Kopiuj</button>
+      </div>
     </div>
 
     <div style="margin:10px 0;">
@@ -367,10 +390,13 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
         <div class="panel-title">📱 Dołącz</div>
         <div style="display:flex;align-items:center;gap:12px;">
           <div style="background:#fff;padding:8px;border-radius:8px;flex-shrink:0;"><div id="h-qr"></div></div>
-          <div>
+          <div style="min-width:0;flex:1;">
             <div class="lbl" style="margin-bottom:2px;">Kod pokoju</div>
             <div style="font-family:monospace;font-size:1.1rem;font-weight:900;color:var(--neon);letter-spacing:3px;" id="h-room-id">–</div>
-            <div style="font-size:.65rem;color:var(--muted);margin-top:4px;">Zeskanuj kod QR, aby dołączyć błyskawicznie</div>
+            <div class="copy-link-box" style="margin-top:6px;max-width:100%;padding:4px 6px;">
+              <input type="text" class="copy-link-input" id="h-link-val" style="font-size: .65rem;" readonly>
+              <button class="btn-copy" style="padding: 4px 8px; font-size: .65rem;" onclick="copyJoinLink('h-link-val')">Kopiuj</button>
+            </div>
           </div>
         </div>
       </div>
@@ -546,6 +572,17 @@ function generateQR(elId,text,size=120){
   const el=document.getElementById(elId);if(!el)return;el.innerHTML='';
   new QRCode(el,{text,width:size,height:size,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.M});
 }
+function copyJoinLink(inputId) {
+  const el = document.getElementById(inputId);
+  if(!el) return;
+  el.select();
+  el.setSelectionRange(0, 99999);
+  navigator.clipboard.writeText(el.value).then(() => {
+    notify('🔗 Link skopiowany do schowka!', 'info', 4000);
+  }).catch(() => {
+    notify('❌ Nie udało się skopiować linku', 'err');
+  });
+}
 function addLog(msg,type='normal'){
   if(!G)return;
   G.log=G.log||[];
@@ -647,7 +684,9 @@ function startHost(){
 function showPregame(){
   goScreen('spg');
   document.getElementById('pg-room-id').textContent=roomId;
-  generateQR('pg-qr', 'https://orzech303.github.io/exploding-kittens/?join=' + roomId, 140);
+  const joinUrl = window.location.origin + window.location.pathname + '?join=' + roomId;
+  generateQR('pg-qr', joinUrl, 140);
+  document.getElementById('pg-link-val').value = joinUrl; // Ta linijka wstawia link w pole
   updatePregame();
 }
 
@@ -655,20 +694,46 @@ function updatePregame(){
   if(!G)return;
   document.getElementById('pg-count').textContent=G.players.length;
   document.getElementById('pg-pl-list').innerHTML=G.players.map((p,i)=>`
-    <div class="pregame-pl">
-      <div class="av" style="background:${p.color}">${p.emoji}</div>
-      <span style="font-weight:700;font-size:.88rem">${p.name}</span>
+    <div class="pregame-pl" style="justify-content: space-between;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="av" style="background:${p.color}">${p.emoji}</div>
+        <span style="font-weight:700;font-size:.88rem">${p.name}</span>
+      </div>
+      <button class="btn-danger" style="border:none; border-radius:6px; padding:6px 10px; font-size:.7rem; font-weight:bold; cursor:pointer;" onclick="kickPlayer('${p.peerId}')">Wyrzuć</button>
     </div>
   `).join('');
   const btn=document.getElementById('btn-start');
   btn.disabled=G.players.length<2;
   btn.textContent=G.players.length<2?'🃏 Rozpocznij (min. 2 graczy)':`🃏 Rozpocznij grę (${G.players.length} graczy)`;
 }
+function kickPlayer(peerId) {
+  if (!G) return;
+  const pIndex = G.players.findIndex(x => x.peerId === peerId);
+  if (pIndex === -1) return;
+  
+  const p = G.players[pIndex];
+  const conn = hostConns[peerId];
+  
+  if (conn) {
+    try { conn.send({type: 'KICKED'}); } catch(e) {}
+    // Zamykamy połączenie po ułamku sekundy, żeby wiadomość zdążyła dojść
+    setTimeout(() => { try { conn.close(); } catch(e) {} }, 300);
+    delete hostConns[peerId];
+  }
+  
+  G.players.splice(pIndex, 1);
+  updatePregame();
+  bcast({type: 'LOBBY_UPDATE', players: G.players});
+  notify('Wyrzucono gracza ' + p.name, 'warn');
+}
 
 function hostOnConn(conn){
-  conn.on('data',data=>hostMsg(conn,data));
-  conn.on('close',()=>hostOnClose(conn));
-  conn.on('error',err=>console.error('conn err',err));
+  conn.on('open', () => {
+    conn.on('data', data => hostMsg(conn, data));
+  });
+  conn.on('data', data => hostMsg(conn, data));
+  conn.on('close', () => hostOnClose(conn));
+  conn.on('error', err => console.error('conn err', err));
 }
 
 function hostOnClose(conn){
@@ -706,18 +771,41 @@ function hostMsg(conn,data){
 // ================================================================
 //  HOST: JOIN
 // ================================================================
-function hJoinRequest(conn,data){
-  if(G.phase!=='lobby'){conn.send({type:'ERR',msg:'Gra już trwa.'});return}
-  if(G.players.length>=5){conn.send({type:'ERR',msg:'Pokój pełny (max 5).'});return}
-  const idx=G.players.length;
-  const p={id:'P'+idx+'_'+conn.peer.substr(0,5),peerId:conn.peer,name:data.name||('Gracz '+idx),hand:[],eliminated:false,color:COLORS[idx%COLORS.length],emoji:EMOJIS[idx%EMOJIS.length]};
+function hJoinRequest(conn, data){
+  if(!G) return;
+  if(G.phase !== 'lobby'){ conn.send({type:'ERR', msg:'Gra już trwa.'}); return; }
+  if(G.players.length >= 5){ conn.send({type:'ERR', msg:'Pokój pełny (max 5).'}); return; }
+  
+  const existing = G.players.find(p => p.peerId === conn.peer);
+  if(existing) {
+    existing.name = data.name || existing.name;
+    hostConns[conn.peer] = conn;
+    conn.send({type:'JOIN_OK', player:{id:existing.id, name:existing.name, color:existing.color, emoji:existing.emoji}});
+    updatePregame();
+    bcast({type:'LOBBY_UPDATE', players:G.players});
+    return;
+  }
+
+  const idx = G.players.length;
+  const p = {
+    id: 'P' + idx + '_' + conn.peer.substr(0,5),
+    peerId: conn.peer,
+    name: data.name || ('Gracz ' + (idx + 1)),
+    hand: [],
+    eliminated: false,
+    color: COLORS[idx % COLORS.length],
+    emoji: EMOJIS[idx % EMOJIS.length]
+  };
+
   G.players.push(p);
-  hostConns[conn.peer]=conn;
-  conn.send({type:'JOIN_OK',player:{id:p.id,name:p.name,color:p.color,emoji:p.emoji}});
-  conn.send({type:'LOBBY_UPDATE',players:G.players});
-  bcast({type:'LOBBY_UPDATE',players:G.players},conn.peer);
+  hostConns[conn.peer] = conn;
+  
+  conn.send({type:'JOIN_OK', player:{id:p.id, name:p.name, color:p.color, emoji:p.emoji}});
+  conn.send({type:'LOBBY_UPDATE', players:G.players});
+  bcast({type:'LOBBY_UPDATE', players:G.players}, conn.peer);
+  
   updatePregame();
-  notify(p.name+' dołączył!','info');
+  notify(p.name + ' dołączył!', 'info');
 }
 
 // ================================================================
@@ -745,7 +833,9 @@ function startGame(){
   
   goScreen('sh');
   document.getElementById('h-room-id').textContent=roomId;
-  generateQR('h-qr', 'https://orzech303.github.io/exploding-kittens/?join=' + roomId, 90);
+  const joinUrl = window.location.origin + window.location.pathname + '?join=' + roomId;
+  generateQR('h-qr', joinUrl, 90);
+  document.getElementById('h-link-val').value = joinUrl; // Ta linijka wstawia link w pole
   renderHost();
 }
 
@@ -1131,6 +1221,11 @@ function clientMsg(data){
     case 'CHOOSE_PAIR_TARGET': showPairTargetModal(data.players);break;
     case 'GOT_CARD':          notify((data.stolen?'🎉 Ukradłeś: ':'📬 Dostałeś: ')+CI(data.card.type).em+' '+CI(data.card.type).name,'info');break;
     case 'LOST_CARD':         notify('😱 ' + data.thiefName + ' ukradł Ci: ' + CI(data.card.type).em + ' ' + CI(data.card.type).name, 'warn'); break;
+    case 'KICKED':            
+        notify('Zostałeś wyrzucony z pokoju przez Hosta.', 'err', 5000);
+        if (cConn) cConn.close();
+        goScreen('sl'); // Przekierowanie do ekranu głównego
+        break;
     case 'GAME_OVER':         {const w=data.winner;w.id===myId?showWinOverlay(w):showLossModal(w);break;}
   }
 }
