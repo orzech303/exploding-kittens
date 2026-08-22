@@ -189,6 +189,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
 /* Card tooltip on long-press / hover */
 .card-tooltip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:rgba(10,10,20,.97);border:1.5px solid var(--border);border-radius:var(--rsm);padding:8px 11px;font-size:.72rem;font-weight:600;color:var(--text);white-space:nowrap;max-width:200px;white-space:normal;width:180px;z-index:500;box-shadow:0 8px 24px rgba(0,0,0,.7);pointer-events:none;animation:fadeIn .15s ease;text-align:left;line-height:1.45}
 .card-tooltip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:rgba(10,10,20,.97)}
+
 .c-EXPLODING_KITTEN{background:linear-gradient(135deg,#6b0000,#ef233c);border-color:#ff7070!important}
 .c-DEFUSE{background:linear-gradient(135deg,#053d2f,#06d68f)}
 .c-SKIP{background:linear-gradient(135deg,#1a307a,#4c6ef5)}
@@ -196,11 +197,6 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
 .c-FAVOR{background:linear-gradient(135deg,#3d1a7a,#9b5de5)}
 .c-SHUFFLE{background:linear-gradient(135deg,#5a3800,#ffd60a);color:#1a1000}
 .c-SEE_THE_FUTURE{background:linear-gradient(135deg,#0a3a52,#00c9ff)}
-.c-CAT_TACO{background:linear-gradient(135deg,#3d1060,#b06dff)}
-.c-CAT_WATERMELON{background:linear-gradient(135deg,#0d3d1a,#4ae080);color:#0a1a0a}
-.c-CAT_POTATO{background:linear-gradient(135deg,#5a2800,#d97706)}
-.c-CAT_BEARD{background:linear-gradient(135deg,#12104a,#6c63ff)}
-.c-CAT_RAINBOW{background:linear-gradient(135deg,#4a0820,#f43f5e)}
 
 /* ACTION BAR */
 .action-bar{padding:12px 14px;background:var(--surface);border-top:1.5px solid var(--border);display:flex;gap:10px;flex-shrink:0}
@@ -452,6 +448,11 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
   </div>
 
   <div class="others-row" id="c-others"></div>
+  
+  <!-- CLIENT LAST ACTION BOX -->
+  <div class="last-action" id="c-last-action" style="margin: 10px 14px 0; min-height: 48px; padding: 10px; border: 1.5px solid var(--border);">
+    <span style="color:var(--muted);">Gra się zaczyna...</span>
+  </div>
 
   <div class="hand-wrap">
     <div class="hand-header">
@@ -474,6 +475,26 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
 
 <script>
 // ================================================================
+//  KOTY CONFIGURATION - EDYTUJ TUTAJ ABY ZMIENIAĆ KOTY!
+// ================================================================
+const CUSTOM_CATS = {
+  CAT_SEAL:     { name: 'Fokokot', em: '🦭', bg: 'linear-gradient(135deg,#3d1060,#b06dff)', miniBg: '#b06dff', color: '#fff' },
+  CAT_CACTUS:   { name: 'Kaktusokot', em: '🌵', bg: 'linear-gradient(135deg,#0d3d1a,#4ae080)', miniBg: '#4ae080', color: '#0a1a0a' },
+  CAT_SQUIRREL: { name: 'Orzechokot', em: '🐿️', bg: 'linear-gradient(135deg,#5a2800,#d97706)', miniBg: '#d97706', color: '#fff' },
+  CAT_MUSHROOM: { name: 'Grzybokot', em: '🍄', bg: 'linear-gradient(135deg,#4a0820,#f43f5e)', miniBg: '#f43f5e', color: '#fff' },
+  CAT_PRETZEL:  { name: 'Preclokot', em: '🥨', bg: 'linear-gradient(135deg,#12104a,#6c63ff)', miniBg: '#6c63ff', color: '#fff' }
+};
+
+// Automatyczne generowanie stylów CSS dla kotów
+let catStyles = '';
+Object.entries(CUSTOM_CATS).forEach(([id, c]) => {
+  catStyles += `.c-${id} { background: ${c.bg}; color: ${c.color}; }\n`;
+});
+const styleEl = document.createElement('style');
+styleEl.textContent = catStyles;
+document.head.appendChild(styleEl);
+
+// ================================================================
 //  CONSTANTS
 // ================================================================
 const CARDS = {
@@ -483,14 +504,13 @@ const CARDS = {
   ATTACK:{id:'ATTACK',name:'Atak',em:'⚡',desc:'Kończysz turę bez dobierania. Następny gracz musi zagrać 2 tury.'},
   FAVOR:{id:'FAVOR',name:'Przysługa',em:'🤝',desc:'Wybrany gracz musi Ci oddać jedną kartę (jego wybór).'},
   SHUFFLE:{id:'SHUFFLE',name:'Przemieszaj',em:'🔀',desc:'Tasuje talię w losowej kolejności.'},
-  SEE_THE_FUTURE:{id:'SEE_THE_FUTURE',name:'Podejrzyj Przyszłość',em:'🔮',desc:'Potajemnie oglądasz 3 wierzchnie karty talii (tylko Ty).'},
-  CAT_TACO:{id:'CAT_TACO',name:'Tacokotek',em:'🌮',desc:'Bez efektu. Zagraj PARĘ takich samych kotów → ukradnij losową kartę.'},
-  CAT_WATERMELON:{id:'CAT_WATERMELON',name:'Arbuzokot',em:'🍉',desc:'Bez efektu. Zagraj PARĘ takich samych kotów → ukradnij losową kartę.'},
-  CAT_POTATO:{id:'CAT_POTATO',name:'Ziemniakokot',em:'🥔',desc:'Bez efektu. Zagraj PARĘ takich samych kotów → ukradnij losową kartę.'},
-  CAT_BEARD:{id:'CAT_BEARD',name:'Brodokot',em:'🧔',desc:'Bez efektu. Zagraj PARĘ takich samych kotów → ukradnij losową kartę.'},
-  CAT_RAINBOW:{id:'CAT_RAINBOW',name:'Tęczokot',em:'🌈',desc:'Bez efektu. Zagraj PARĘ takich samych kotów → ukradnij losową kartę.'},
+  SEE_THE_FUTURE:{id:'SEE_THE_FUTURE',name:'Podejrzyj Przyszłość',em:'🔮',desc:'Potajemnie oglądasz 3 wierzchnie karty talii (tylko Ty).'}
 };
-const CAT_TYPES=['CAT_TACO','CAT_WATERMELON','CAT_POTATO','CAT_BEARD','CAT_RAINBOW'];
+Object.entries(CUSTOM_CATS).forEach(([id, c]) => {
+  CARDS[id] = { id, name: c.name, em: c.em, desc: 'Bez efektu. Zagraj PARĘ takich samych kotów → ukradnij losową kartę.' };
+});
+
+const CAT_TYPES = Object.keys(CUSTOM_CATS);
 const COLORS=['#ff4060','#00edc8','#ffd60a','#9b5de5','#00d68f'];
 const EMOJIS=['😈','🐯','🦊','🐻','🐼'];
 const CI=t=>CARDS[t]||{id:t,name:t,em:'?',desc:''};
@@ -502,8 +522,8 @@ const isCat=t=>CAT_TYPES.includes(t);
 let peer=null, isHost=false;
 let myId=null, myName=null, roomId=null;
 // host
-let hostConns={};  // peerId->DataConnection
-let G=null;        // game state (host only)
+let hostConns={};  
+let G=null;        
 // client
 let cConn=null;
 let cHand=[], cInfo={};
@@ -539,8 +559,15 @@ function renderLog(){
 }
 function miniCard(t){
   const ci=CI(t);
-  const bg={EXPLODING_KITTEN:'#ef233c',DEFUSE:'#06d68f',SKIP:'#4c6ef5',ATTACK:'#ff8800',FAVOR:'#9b5de5',SHUFFLE:'#ffd60a',SEE_THE_FUTURE:'#00c9ff',CAT_TACO:'#b06dff',CAT_WATERMELON:'#4ae080',CAT_POTATO:'#d97706',CAT_BEARD:'#6c63ff',CAT_RAINBOW:'#f43f5e'}[t]||'#555';
-  const col=['SHUFFLE','CAT_WATERMELON'].includes(t)?'#1a1000':'#fff';
+  let bg='#555', col='#fff';
+  if (CUSTOM_CATS[t]) {
+    bg = CUSTOM_CATS[t].miniBg;
+    col = CUSTOM_CATS[t].color;
+  } else {
+    const bgMap={EXPLODING_KITTEN:'#ef233c',DEFUSE:'#06d68f',SKIP:'#4c6ef5',ATTACK:'#ff8800',FAVOR:'#9b5de5',SHUFFLE:'#ffd60a',SEE_THE_FUTURE:'#00c9ff'};
+    bg = bgMap[t] || bg;
+    if(t==='SHUFFLE') col='#1a1000';
+  }
   return`<span class="mc" style="background:${bg};color:${col}">${ci.em} ${ci.name}</span>`;
 }
 
@@ -591,7 +618,7 @@ function startHost(){
 
   peer.on('open',id=>{
     myId=id;
-    G={phase:'lobby',players:[],deck:[],discard:[],currentPlayerIndex:0,attackTurns:0,winner:null,log:[],pendingAction:null};
+    G={phase:'lobby',players:[],deck:[],discard:[],currentPlayerIndex:0,attackTurns:0,winner:null,log:[],pendingAction:null,lastActionHtml:null};
     showPregame();
     notify('Pokój gotowy! Kod: '+roomId,'info');
   });
@@ -697,7 +724,6 @@ function hJoinRequest(conn,data){
 //  HOST: START GAME
 // ================================================================
 function startGame(){
-  // Usuń graczy, którzy się rozłączyli z pokoju w międzyczasie
   if (G && G.players) {
     G.players = G.players.filter(p => hostConns[p.peerId]);
   }
@@ -710,10 +736,11 @@ function startGame(){
   const hands=dealHands(n);
   G.players.forEach((p,i)=>{p.hand=hands[i];p.eliminated=false});
   G.deck=buildDeck(n);
-  G.discard=[];G.currentPlayerIndex=0;G.attackTurns=0;G.winner=null;G.log=[];G.pendingAction=null;
+  G.discard=[];G.currentPlayerIndex=0;G.attackTurns=0;G.winner=null;G.log=[];G.pendingAction=null;G.lastActionHtml=null;
   G.phase='playing';
   
   addLog('🎮 Gra rozpoczęta! Graczy: '+n,'imp');
+  setLastAction(`Gra się rozpoczęła!`);
   G.players.forEach(p=>sendTo(p.id,{type:'GAME_START',yourHand:p.hand,gameInfo:mkInfo(p.id)}));
   
   goScreen('sh');
@@ -732,6 +759,7 @@ function mkInfo(forId){
     currentPlayerId:cp?.id,
     currentPlayerName:cp?.name,
     attackTurns:G.attackTurns,
+    lastActionHtml:G.lastActionHtml,
     players:G.players.map(p=>({id:p.id,name:p.name,color:p.color,emoji:p.emoji,cardCount:p.hand.length,eliminated:p.eliminated})),
     phase:G.phase,
     winner:G.winner?{id:G.winner.id,name:G.winner.name,color:G.winner.color,emoji:G.winner.emoji}:null,
@@ -773,10 +801,12 @@ function hPlayCard(conn,data){
     if(!isCat(cards[0].type)||cards[0].type!==cards[1].type){
       conn.send({type:'ERR',msg:'Para musi być z identycznych kart kota.'});return;
     }
-    // Remove from hand (high index first)
+    // Remove from hand
     [...cardIndices].sort((a,b)=>b-a).forEach(i=>p.hand.splice(i,1));
     G.discard.push(...cards);
     addLog(p.name+' zagrał parę '+CI(cards[0].type).em+' '+CI(cards[0].type).name,'imp');
+    setLastAction(`${p.name} zagrał parę ${miniCard(cards[0].type)}`);
+    
     if(targetPlayerId){
       execPairSteal(p,targetPlayerId);
     } else {
@@ -896,7 +926,7 @@ function hDrawCard(conn){
       const def=p.hand.splice(di,1)[0];
       G.discard.push(def);
       addLog('💥 '+p.name+' WYCIĄGNĄŁ KOTKA! Użył Rozbrojenia!','boom');
-      setLastAction('💥 '+p.name+' dobił kotka — rozbroił go! 🛡️');
+      setLastAction('💥 '+p.name+' wyciągnął kotka — i go rozbroił! 🛡️');
       notify(p.name+' wyciągnął kotka i rozbroił go!','warn');
       sendTo(p.id,{type:'DEFUSE_PLACE',deckSize:G.deck.length,card});
       G.pendingAction={type:'DEFUSE_PLACE',playerId:p.id,kittenCard:card};
@@ -985,6 +1015,7 @@ function checkWin(){
 //  HOST: RENDERING
 // ================================================================
 function setLastAction(html){
+  if(G) G.lastActionHtml = html;
   const el=document.getElementById('h-last-action');
   if(el)el.innerHTML=`<div style="font-size:.95rem;font-weight:700;">${html}</div>`;
 }
@@ -1149,6 +1180,16 @@ function renderClient(){
       <div class="opc-cnt">${p.eliminated?'💀':p.cardCount+'🃏'}</div>
     </div>
   `).join('');
+  
+  // Last Action
+  const cLast = document.getElementById('c-last-action');
+  if (cLast) {
+    if (cInfo.lastActionHtml) {
+      cLast.innerHTML = `<div style="font-size:.9rem;font-weight:700;line-height:1.2;display:flex;align-items:center;justify-content:center;height:100%;text-align:center;">${cInfo.lastActionHtml}</div>`;
+    } else {
+      cLast.innerHTML = `<span style="color:var(--muted);display:flex;align-items:center;justify-content:center;height:100%;">Gra się zaczyna...</span>`;
+    }
+  }
 
   // Hand
   const hc=document.getElementById('c-hand');
@@ -1187,10 +1228,10 @@ function renderClient(){
     const card = cHand[selIdx[0]];
     if (isCat(card.type)) {
       hh.textContent = 'Ta karta nie ma efektu. Musisz dobrać do niej PARĘ, by zagrać!';
-      playDisabled = true; // Blokada zagrywania pojedynczego kota
+      playDisabled = true; 
     } else if (card.type === 'DEFUSE') {
       hh.textContent = 'Rozbrojenie ratuje przed Kotkiem. Nie zagrywaj go z ręki!';
-      playDisabled = true; // Blokada zagrywania rozbrojenia z ręki
+      playDisabled = true; 
     } else {
       hh.textContent = 'Kliknij Zagraj, aby użyć tej karty.';
     }
@@ -1236,7 +1277,6 @@ function clientPlayCards(){
   const cards=selIdx.map(i=>cHand[i]);
 
   if(cards.length===2){
-    // Pair — need target
     const meId=cInfo.myId||myId;
     const targets=(cInfo.players||[]).filter(p=>!p.eliminated&&p.id!==meId&&p.cardCount>0);
     if(!targets.length){notify('Brak graczy do okradzenia!','err');return}
@@ -1271,7 +1311,12 @@ function mkModal(id,inner){
 function showFutureModal(cards){
   const html=cards.map(c=>{
     const ci=CI(c.type);
-    const bg={EXPLODING_KITTEN:'#ef233c',DEFUSE:'#06d68f',SKIP:'#4c6ef5',ATTACK:'#ff8800',FAVOR:'#9b5de5',SHUFFLE:'#ffd60a',SEE_THE_FUTURE:'#00c9ff',CAT_TACO:'#b06dff',CAT_WATERMELON:'#4ae080',CAT_POTATO:'#d97706',CAT_BEARD:'#6c63ff',CAT_RAINBOW:'#f43f5e'}[c.type]||'#444';
+    let bg='#444';
+    if(CUSTOM_CATS[c.type]) bg=CUSTOM_CATS[c.type].miniBg;
+    else {
+      const bgMap={EXPLODING_KITTEN:'#ef233c',DEFUSE:'#06d68f',SKIP:'#4c6ef5',ATTACK:'#ff8800',FAVOR:'#9b5de5',SHUFFLE:'#ffd60a',SEE_THE_FUTURE:'#00c9ff'};
+      bg = bgMap[c.type]||bg;
+    }
     return`<div class="fc" style="background:${bg}"><div class="em">${ci.em}</div><div class="nm">${ci.name}</div></div>`;
   }).join('');
   mkModal('m-future',`
