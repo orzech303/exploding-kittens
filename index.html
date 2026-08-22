@@ -783,24 +783,34 @@ function hostMsg(conn,data){
 //  HOST: JOIN
 // ================================================================
 function hJoinRequest(conn, data){
-  if(!G) return;
-  if(G.phase !== 'lobby'){ conn.send({type:'ERR', msg:'Gra już trwa.'}); return; }
-  if(G.players.length >= 5){ conn.send({type:'ERR', msg:'Pokój pełny (max 5).'}); return; }
-  
-  const existing = G.players.find(p => p.peerId === conn.peer);
-  if(existing) {
-    existing.name = data.name || existing.name;
-    hostConns[conn.peer] = conn;
-    conn.send({type:'JOIN_OK', player:{id:existing.id, name:existing.name, color:existing.color, emoji:existing.emoji}});
-    updatePregame();
-    bcast({type:'LOBBY_UPDATE', players:G.players});
+  if (!G) return;
+  if (G.phase !== 'lobby') {
+    try { conn.send({ type: 'ERR', msg: 'Gra już trwa.' }); } catch(e){}
+    return;
+  }
+
+  const pId = data.peerId || conn.peer;
+  const existing = G.players.find(p => p.peerId === pId);
+
+  // Jeśli gracz ponowił JOIN_REQUEST, wyślij mu stan i potwierdzenie
+  if (existing) {
+    hostConns[pId] = conn;
+    try {
+      conn.send({ type: 'JOIN_OK', player: { id: existing.id, name: existing.name, color: existing.color, emoji: existing.emoji } });
+      conn.send({ type: 'LOBBY_UPDATE', players: G.players });
+    } catch(e){}
+    return;
+  }
+
+  if (G.players.length >= 5) {
+    try { conn.send({ type: 'ERR', msg: 'Pokój pełny (max 5).' }); } catch(e){}
     return;
   }
 
   const idx = G.players.length;
   const p = {
-    id: 'P' + idx + '_' + conn.peer.substr(0,5),
-    peerId: conn.peer,
+    id: 'P' + idx + '_' + pId.substr(0, 5),
+    peerId: pId,
     name: data.name || ('Gracz ' + (idx + 1)),
     hand: [],
     eliminated: false,
@@ -809,13 +819,14 @@ function hJoinRequest(conn, data){
   };
 
   G.players.push(p);
-  hostConns[conn.peer] = conn;
-  
-  conn.send({type:'JOIN_OK', player:{id:p.id, name:p.name, color:p.color, emoji:p.emoji}});
-  conn.send({type:'LOBBY_UPDATE', players:G.players});
-  bcast({type:'LOBBY_UPDATE', players:G.players}, conn.peer);
-  
+  hostConns[pId] = conn;
+
+  try {
+    conn.send({ type: 'JOIN_OK', player: { id: p.id, name: p.name, color: p.color, emoji: p.emoji } });
+  } catch(e){}
+
   updatePregame();
+  bcast({ type: 'LOBBY_UPDATE', players: G.players });
   notify(p.name + ' dołączył!', 'info');
 }
 
@@ -1169,49 +1180,72 @@ function joinGame(){
   initClient(code,name);
 }
 
-function initClient(hostId,name){
+let joinInterval = null;
+
+function initClient(hostId, name){
   goScreen('slb');
-  document.getElementById('lb-name').textContent='Witaj, '+name+'!';
-  document.getElementById('c-myname').textContent=name;
+  document.getElementById('lb-name').textContent = 'Witaj, ' + name + '!';
+  document.getElementById('c-myname').textContent = name;
+
+  if (joinInterval) clearInterval(joinInterval);
 
   peer = new Peer({
-  debug: 0,
-  config: {
-    iceServers: [
-      { urls: 'stun:stun.l.google.com:19302' },
-      { urls: 'stun:stun1.l.google.com:19302' },
-      { urls: 'turn:openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayproject' },
-      { urls: 'turn:openrelay.metered.ca:443', username: 'openrelayproject', credential: 'openrelayproject' },
-      { urls: 'turn:openrelay.metered.ca:443?transport=tcp', username: 'openrelayproject', credential: 'openrelayproject' }
-    ]
-  }
-});
-
-  peer.on('open',id=>{
-    myId=id;
-    cConn=peer.connect(hostId,{reliable:true});
-    cConn.on('open',()=>{
-      setConnDot('c','ok','OK');
-      cConn.send({type:'JOIN_REQUEST',name});
-    });
-    cConn.on('data',data=>clientMsg(data));
-    cConn.on('close',()=>{
-      setConnDot('c','bad','Offline');
-      notify('Połączenie z hostem zerwane!','err',8000);
-    });
-    cConn.on('error',err=>{console.error(err);notify('Błąd: '+err,'err')});
+    debug: 1,
+    config: {
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: 'stun:stun1.l.google.com:19302' },
+        { urls: 'turn:openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayproject' },
+        { urls: 'turn:openrelay.metered.ca:443', username: 'openrelayproject', credential: 'openrelayproject' }
+      ]
+    }
   });
 
-  peer.on('error',err=>{
-    console.error(err);
-    if(err.type==='peer-unavailable'){notify('Nie znaleziono pokoju: '+hostId,'err');goScreen('sjoin')}
-    else notify('Błąd PeerJS: '+err.type,'err');
+  peer.on('open', id => {
+    myId = id;
+    cConn = peer.connect(hostId, { reliable: true });
+
+    function trySendJoin() {
+      if (cConn && cConn.open) {
+        cConn.send({ type: 'JOIN_REQUEST', name: name, peerId: id });
+      }
+    }
+
+    cConn.on('open', () => {
+      setConnDot('c', 'ok', 'Połączono');
+      trySendJoin();
+      // Ponawiaj wysyłanie prośby co 800ms, dopóki host nie potwierdzi (JOIN_OK)
+      joinInterval = setInterval(trySendJoin, 800);
+    });
+
+    cConn.on('data', data => {
+      if (data.type === 'JOIN_OK') {
+        clearInterval(joinInterval);
+      }
+      clientMsg(data);
+    });
+
+    cConn.on('close', () => {
+      clearInterval(joinInterval);
+      setConnDot('c', 'bad', 'Offline');
+      notify('Połączenie zerwane!', 'err', 6000);
+    });
+
+    cConn.on('error', err => {
+      console.error('Błąd cConn:', err);
+      notify('Błąd transmisji: ' + err, 'err');
+    });
   });
 
-  peer.on('disconnected',()=>{
-    setConnDot('c','wait','Łączenie...');
-    notify('Rozłączono, próbuję ponownie...','warn');
-    setTimeout(()=>{try{peer.reconnect()}catch(e){}},2000);
+  peer.on('error', err => {
+    console.error('Błąd peer:', err);
+    if (joinInterval) clearInterval(joinInterval);
+    if (err.type === 'peer-unavailable') {
+      notify('Nie znaleziono pokoju o kodzie: ' + hostId, 'err', 6000);
+      goScreen('sjoin');
+    } else {
+      notify('Błąd sieci PeerJS: ' + err.type, 'err');
+    }
   });
 }
 
