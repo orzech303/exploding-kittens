@@ -81,12 +81,6 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
 .pregame-pl{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--rsm)}
 .av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;flex-shrink:0}
 
-/* Copy Link */
-.copy-link-box {display:flex;align-items:center;gap:8px;margin-top:8px;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--rsm);padding:6px 10px;width:100%;max-width:300px}
-.copy-link-input {flex:1;background:transparent;border:none;color:var(--text);font-family:monospace;font-size:.75rem;outline:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.btn-copy {background:var(--surface3);border:none;color:var(--text);border-radius:6px;padding:5px 10px;font-size:.75rem;cursor:pointer;transition:all 0.2s;font-weight:bold;font-family:'Nunito',sans-serif}
-.btn-copy:hover {background:var(--neon);color:#000}
-
 /* ======================== LOBBY (client waiting) ======================== */
 #slb{align-items:center;justify-content:center;gap:18px;padding:30px 20px;background:radial-gradient(ellipse at top,#100820,var(--bg));text-align:center}
 .lobby-title{font-family:'Bangers',cursive;letter-spacing:2px;font-size:2.2rem;color:var(--neon)}
@@ -140,7 +134,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
 .log-e.boom{color:var(--red);border-left:3px solid var(--red);font-weight:700}
 
 /* Last action display */
-.last-action{padding:12px;text-align:center;min-height:56px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;background:var(--surface2);border-radius:var(--rsm);margin:0 14px 10px}
+.last-action{padding:16px;text-align:center;min-height:70px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;background:var(--surface2);border-radius:var(--rsm);margin:0 14px 10px}
 
 /* ======================== CLIENT GAME SCREEN ======================== */
 #sc{padding:0;background:var(--bg)}
@@ -177,12 +171,12 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
 .opc-cnt{font-size:.6rem;color:var(--muted)}
 
 /* Hand */
-.hand-wrap{flex:1;display:flex;flex-direction:column;padding:10px 14px 0;gap:6px;overflow:hidden}
+.hand-wrap{flex:1;display:flex;flex-direction:column;padding:12px 14px 0;gap:8px;overflow:hidden}
 .hand-header{display:flex;align-items:center;justify-content:space-between}
 .hand-lbl{font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px}
 .hand-sel-hint{font-size:.72rem;color:var(--neon);font-weight:700}
 .hand-cards{display:flex;flex-wrap:wrap;gap:8px;overflow-y:auto;align-content:flex-start;flex:1;padding-bottom:8px}
-.hand-hint{font-size:.72rem;color:var(--muted);text-align:center;padding:2px 0 4px}
+.hand-hint{font-size:.72rem;color:var(--muted);text-align:center;padding:4px 0 8px}
 
 /* CARDS */
 .card{border-radius:var(--rsm);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:7px 5px 6px;cursor:pointer;position:relative;transition:transform .15s,box-shadow .15s;border:2.5px solid transparent;color:#fff;text-align:center;user-select:none;-webkit-user-select:none;width:calc(33.33% - 6px);min-width:86px;max-width:108px;aspect-ratio:2/3;overflow:hidden}
@@ -191,6 +185,10 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
 .card-em{font-size:1.75rem;line-height:1;margin-top:4px;margin-bottom:3px;pointer-events:none;flex-shrink:0}
 .card-nm{font-size:.65rem;font-weight:800;line-height:1.1;pointer-events:none;flex-shrink:0}
 .card-desc{font-size:.52rem;font-weight:700;line-height:1.2;pointer-events:none;margin-top:4px;opacity:.95;padding:0 2px;flex:1;display:flex;align-items:flex-end;justify-content:center;text-align:center}
+
+/* Card tooltip on long-press / hover */
+.card-tooltip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:rgba(10,10,20,.97);border:1.5px solid var(--border);border-radius:var(--rsm);padding:8px 11px;font-size:.72rem;font-weight:600;color:var(--text);white-space:nowrap;max-width:200px;white-space:normal;width:180px;z-index:500;box-shadow:0 8px 24px rgba(0,0,0,.7);pointer-events:none;animation:fadeIn .15s ease;text-align:left;line-height:1.45}
+.card-tooltip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:rgba(10,10,20,.97)}
 
 .c-EXPLODING_KITTEN{background:linear-gradient(135deg,#6b0000,#ef233c);border-color:#ff7070!important}
 .c-DEFUSE{background:linear-gradient(135deg,#053d2f,#06d68f)}
@@ -202,14 +200,14 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
 
 /* ACTION BAR */
 .action-bar{padding:12px 14px;background:var(--surface);border-top:1.5px solid var(--border);display:flex;gap:10px;flex-shrink:0}
-.btn-draw{flex:1;padding:15px;background:linear-gradient(135deg,var(--accent),#c9003a);color:#fff;font-size:.95rem;font-weight:800;font-family:'Nunito',sans-serif;border:none;border-radius:var(--r);cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:7px;box-shadow:0 4px 16px rgba(255,64,96,.35)}
+.btn-draw{flex:1;padding:15px;background:linear-gradient(135deg,var(--accent),#c9003a);color:#fff;font-size:.95rem;font-weight:800;font-family:'Nunito',sans-serif;border:none;border-radius:var(--r);cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:7px;box-shadow:0 4px 166px rgba(255,64,96,.35)}
 .btn-draw:active{transform:scale(.96)}
 .btn-draw:disabled{opacity:.35;cursor:not-allowed;transform:none}
 .btn-play{flex:1;padding:15px;background:linear-gradient(135deg,var(--neon),#00a88c);color:#001a15;font-size:.95rem;font-weight:800;font-family:'Nunito',sans-serif;border:none;border-radius:var(--r);cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:7px;box-shadow:0 4px 16px rgba(0,237,200,.25)}
 .btn-play:active{transform:scale(.96)}
 .btn-play:disabled{opacity:.35;cursor:not-allowed;transform:none}
 
-/* MODALS */
+/* ======================== MODALS ======================== */
 .mo{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px;animation:fadeIn .2s ease}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .mb{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:22px;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,.8);animation:slideUp .22s ease;max-height:90vh;overflow-y:auto}
@@ -219,39 +217,68 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
 .mopts{display:flex;flex-direction:column;gap:7px}
 .mopt{padding:13px 14px;background:var(--surface2);border:2px solid var(--border);border-radius:var(--rsm);cursor:pointer;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;color:var(--text);text-align:left;display:flex;align-items:center;gap:9px;width:100%;transition:all .18s}
 .mopt:hover{border-color:var(--neon);color:var(--neon)}
+.mopt:active{transform:scale(.97)}
 
+/* Future cards */
 .future-cards{display:flex;gap:9px;justify-content:center;margin:14px 0}
 .fc{display:flex;flex-direction:column;align-items:center;gap:4px;padding:11px 8px;border-radius:var(--rsm);min-width:68px;color:#fff}
 .fc .em{font-size:1.9rem}
 .fc .nm{font-size:.58rem;font-weight:800;text-align:center}
 
+/* Position selector */
 .pos-opts{display:flex;flex-direction:column;gap:6px;margin:10px 0}
 .pos-custom{display:flex;gap:8px;align-items:center}
 .pos-custom input{flex:1;padding:10px;background:var(--surface2);border:2px solid var(--border);border-radius:var(--rsm);color:var(--text);font-family:'Nunito',sans-serif;font-size:.9rem;outline:none;min-width:0}
+.pos-custom input:focus{border-color:var(--accent)}
 
-.expl-overlay{position:fixed;inset:0;background:radial-gradient(circle,rgba(255,80,60,.97),rgba(80,0,0,.97));display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2000}
+/* Explosion */
+.expl-overlay{position:fixed;inset:0;background:radial-gradient(circle,rgba(255,80,60,.97),rgba(80,0,0,.97));display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2000;animation:explIn .45s cubic-bezier(.17,.67,.47,1.3)}
+@keyframes explIn{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
 .expl-em{font-size:7rem;animation:shake .4s infinite}
 @keyframes shake{0%,100%{transform:rotate(-6deg) scale(1)}50%{transform:rotate(6deg) scale(1.06)}}
-.expl-txt{font-family:'Bangers',cursive;font-size:3.2rem;color:#fff;letter-spacing:4px;margin:16px 0;text-align:center}
+.expl-txt{font-family:'Bangers',cursive;font-size:3.2rem;color:#fff;letter-spacing:4px;text-shadow:0 0 30px rgba(255,255,255,.7);margin:16px 0;text-align:center}
 .expl-sub{color:rgba(255,255,255,.75);font-size:.95rem;text-align:center;line-height:1.6}
 
+/* Winner */
 .winner-overlay{position:fixed;inset:0;background:radial-gradient(ellipse at center,#001e10,#000a06);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2000;gap:16px;text-align:center;padding:20px}
 .win-em{font-size:5.5rem;animation:bounce 1s infinite}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
 .win-title{font-family:'Bangers',cursive;font-size:2.8rem;color:var(--yellow);letter-spacing:4px}
 .win-name{font-family:'Bangers',cursive;font-size:2.2rem;letter-spacing:2px}
 
+/* Notifications */
 .nc{position:fixed;top:14px;right:14px;z-index:3000;display:flex;flex-direction:column;gap:7px;max-width:290px;pointer-events:none}
 .notif{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rsm);padding:11px 14px;font-size:.8rem;font-weight:600;box-shadow:var(--shadow);animation:slideInR .25s ease;pointer-events:auto}
 @keyframes slideInR{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
 .n-info{border-left:3px solid var(--neon)}
 .n-warn{border-left:3px solid var(--yellow)}
 .n-err{border-left:3px solid var(--red)}
+
+/* mini card badge */
 .mc{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:6px;font-size:.78rem;font-weight:700;color:#fff}
 
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* ======================== COPY LINK BOX ======================== */
+.copy-link-box {
+  display: flex; align-items: center; gap: 8px; margin-top: 8px;
+  background: var(--surface2); border: 1.5px solid var(--border);
+  border-radius: var(--rsm); padding: 6px 10px; width: 100%; max-width: 300px;
+}
+.copy-link-input {
+  flex: 1; background: transparent; border: none; color: var(--text);
+  font-family: monospace; font-size: .75rem; outline: none; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap;
+}
+.btn-copy {
+  background: var(--surface3); border: none; color: var(--text);
+  border-radius: 6px; padding: 5px 10px; font-size: .75rem; cursor: pointer;
+  transition: all 0.2s; font-weight: bold; font-family: 'Nunito', sans-serif;
+}
+.btn-copy:hover { background: var(--neon); color: #000; }
+.btn-copy:active { transform: scale(0.95); }
 </style>
 </head>
 <body>
@@ -269,8 +296,8 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
   <div id="share-box" class="share-box" style="margin-top:8px;">
     <h3>📡 Jak grać na telefonach?</h3>
     <div class="share-step"><span class="num">1</span><span>Host tworzy grę, klikając przycisk powyżej.</span></div>
-    <div class="share-step"><span class="num">2</span><span>Na ekranie poczekalni wyświetli się kod QR oraz link.</span></div>
-    <div class="share-step"><span class="num">3</span><span>Gracze skanują kod lub wpisują kod pokoju i dołączają natychmiast!</span></div>
+    <div class="share-step"><span class="num">2</span><span>Na ekranie poczekalni wyświetli się specjalny kod QR.</span></div>
+    <div class="share-step"><span class="num">3</span><span>Inni gracze skanują kod swoimi smartfonami i dołączają natychmiast bez przepisywania kodu!</span></div>
   </div>
 </div>
 
@@ -281,7 +308,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
     <p style="text-align:center;font-size:.82rem;color:var(--muted);">Host tylko zarządza grą — nie jest graczem.</p>
     <div>
       <label class="lbl">Nazwa stołu / sesji</label>
-      <input type="text" id="host-table-name" class="inp" placeholder="np. Wieczór ze znajomymi" maxlength="20">
+      <input type="text" id="host-table-name" class="inp" placeholder="np. Wieczór u Basi" maxlength="20">
     </div>
     <button class="btn btn-primary" style="width:100%;" onclick="startHost()">🚀 Utwórz pokój</button>
     <button class="btn btn-secondary" style="width:100%;" onclick="goScreen('sl')">← Wróć</button>
@@ -309,7 +336,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
 <div id="spg" class="screen">
   <div class="pregame-card">
     <h2>🎴 Poczekalnia</h2>
-    <p style="text-align:center;font-size:.78rem;color:var(--muted);margin-bottom:6px;">Zeskanuj kod telefonem lub skopiuj link</p>
+    <p style="text-align:center;font-size:.78rem;color:var(--muted);margin-bottom:6px;">Zeskanuj kod telefonem lub wpisz kod pokoju</p>
 
     <div class="room-id-box">
       <div class="room-id-label">Kod pokoju</div>
@@ -341,7 +368,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
   <div style="font-size:3rem;">🐱</div>
   <h2 class="lobby-title">Czekaj na start</h2>
   <p id="lb-name" style="color:var(--muted);font-size:.9rem;"></p>
-  <p class="pulse-text" id="lb-status">Łączenie z Hostem...</p>
+  <p class="pulse-text" id="lb-status">Host zaraz rozpocznie grę...</p>
   <div id="lb-players" style="display:flex;flex-direction:column;gap:7px;width:100%;max-width:280px;margin-top:10px;"></div>
 </div>
 
@@ -358,6 +385,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
   <div class="hg-body">
     <!-- LEFT -->
     <div class="hg-left">
+      <!-- QR/code panel -->
       <div class="panel">
         <div class="panel-title">📱 Dołącz</div>
         <div style="display:flex;align-items:center;gap:12px;">
@@ -366,13 +394,14 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
             <div class="lbl" style="margin-bottom:2px;">Kod pokoju</div>
             <div style="font-family:monospace;font-size:1.1rem;font-weight:900;color:var(--neon);letter-spacing:3px;" id="h-room-id">–</div>
             <div class="copy-link-box" style="margin-top:6px;max-width:100%;padding:4px 6px;">
-              <input type="text" class="copy-link-input" id="h-link-val" style="font-size:.65rem;" readonly>
-              <button class="btn-copy" style="padding:4px 8px;font-size:.65rem;" onclick="copyJoinLink('h-link-val')">Kopiuj</button>
+              <input type="text" class="copy-link-input" id="h-link-val" style="font-size: .65rem;" readonly>
+              <button class="btn-copy" style="padding: 4px 8px; font-size: .65rem;" onclick="copyJoinLink('h-link-val')">Kopiuj</button>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- Players panel -->
       <div class="panel" style="flex:1;overflow-y:auto;">
         <div class="panel-title">👥 Gracze (<span id="h-alive">0</span> żywych)</div>
         <div id="h-pl-list" class="pl-list"></div>
@@ -381,6 +410,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
 
     <!-- RIGHT -->
     <div class="hg-right">
+      <!-- Status bar -->
       <div class="panel">
         <div class="status-bar">
           <div class="stat"><span class="stat-lbl">🃏 Talia:</span><span class="stat-val" id="h-deck-cnt">–</span></div>
@@ -390,6 +420,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
         </div>
       </div>
 
+      <!-- Deck visual -->
       <div class="panel">
         <div class="panel-title">🎴 Stół</div>
         <div class="deck-area">
@@ -405,11 +436,13 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
         </div>
       </div>
 
+      <!-- Last action -->
       <div class="panel">
         <div class="panel-title">🎬 Ostatnia akcja</div>
         <div class="last-action" id="h-last-action"><span style="color:var(--muted);">Gra trwa...</span></div>
       </div>
 
+      <!-- Log -->
       <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;border-bottom:1.5px solid var(--border);">
         <div class="panel" style="border-bottom:0;padding-bottom:6px;"><div class="panel-title" style="margin:0;">📜 Historia</div></div>
         <div id="h-log" class="game-log"></div>
@@ -442,7 +475,8 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
 
   <div class="others-row" id="c-others"></div>
   
-  <div class="last-action" id="c-last-action" style="margin:8px 14px 0;min-height:48px;padding:8px;border:1.5px solid var(--border);">
+  <!-- CLIENT LAST ACTION BOX -->
+  <div class="last-action" id="c-last-action" style="margin: 10px 14px 0; min-height: 48px; padding: 10px; border: 1.5px solid var(--border);">
     <span style="color:var(--muted);">Gra się zaczyna...</span>
   </div>
 
@@ -461,7 +495,7 @@ h1,h2,.bf{font-family:'Bangers',cursive;letter-spacing:2px}
   </div>
 </div>
 
-</div>
+</div><!-- #app -->
 
 <div class="nc" id="nc"></div>
 
@@ -477,6 +511,7 @@ const CUSTOM_CATS = {
   CAT_PRETZEL:  { name: 'Preclokot', em: '🥨', bg: 'linear-gradient(135deg,#12104a,#6c63ff)', miniBg: '#6c63ff', color: '#fff' }
 };
 
+// Automatyczne generowanie stylów CSS dla kotów
 let catStyles = '';
 Object.entries(CUSTOM_CATS).forEach(([id, c]) => {
   catStyles += `.c-${id} { background: ${c.bg}; color: ${c.color}; }\n`;
@@ -486,21 +521,8 @@ styleEl.textContent = catStyles;
 document.head.appendChild(styleEl);
 
 // ================================================================
-//  WEBRTC CONFIG
+//  CONSTANTS
 // ================================================================
-const PEER_CONFIG = {
-  debug: 1,
-  config: {
-    iceServers: [
-      { urls: 'stun:stun.l.google.com:19302' },
-      { urls: 'stun:stun1.l.google.com:19302' },
-      { urls: 'turn:openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayproject' },
-      { urls: 'turn:openrelay.metered.ca:443', username: 'openrelayproject', credential: 'openrelayproject' },
-      { urls: 'turn:openrelay.metered.ca:443?transport=tcp', username: 'openrelayproject', credential: 'openrelayproject' }
-    ]
-  }
-};
-
 const CARDS = {
   EXPLODING_KITTEN:{id:'EXPLODING_KITTEN',name:'Eksplodujący Kotek',em:'💥',desc:'Dobierasz → wylatujesz! Chyba że masz Rozbrojenie.'},
   DEFUSE:{id:'DEFUSE',name:'Rozbrojenie',em:'🛡️',desc:'Ratuje przed Kotkiem. Włóż kotka w dowolne miejsce talii.'},
@@ -520,15 +542,22 @@ const EMOJIS=['😈','🐯','🦊','🐻','🐼'];
 const CI=t=>CARDS[t]||{id:t,name:t,em:'?',desc:''};
 const isCat=t=>CAT_TYPES.includes(t);
 
+// ================================================================
+//  GLOBALS
+// ================================================================
 let peer=null, isHost=false;
 let myId=null, myName=null, roomId=null;
+// host
 let hostConns={};  
 let G=null;        
+// client
 let cConn=null;
 let cHand=[], cInfo={};
 let selIdx=[];
-let joinRetryTimer=null;
 
+// ================================================================
+//  UTILS
+// ================================================================
 function uid8(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='EK-';for(let i=0;i<8;i++)s+=c[Math.floor(Math.random()*c.length)];return s}
 function shuf(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
 function mkCard(t){return{type:t,id:t+'_'+Math.random().toString(36).substr(2,7)}}
@@ -543,10 +572,16 @@ function generateQR(elId,text,size=120){
   const el=document.getElementById(elId);if(!el)return;el.innerHTML='';
   new QRCode(el,{text,width:size,height:size,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.M});
 }
-function copyJoinLink(inputId){
-  const el=document.getElementById(inputId);if(!el)return;
-  el.select();el.setSelectionRange(0,99999);
-  navigator.clipboard.writeText(el.value).then(()=>notify('🔗 Link skopiowany!','info')).catch(()=>notify('❌ Błąd kopiowania','err'));
+function copyJoinLink(inputId) {
+  const el = document.getElementById(inputId);
+  if(!el) return;
+  el.select();
+  el.setSelectionRange(0, 99999);
+  navigator.clipboard.writeText(el.value).then(() => {
+    notify('🔗 Link skopiowany do schowka!', 'info', 4000);
+  }).catch(() => {
+    notify('❌ Nie udało się skopiować linku', 'err');
+  });
 }
 function addLog(msg,type='normal'){
   if(!G)return;
@@ -573,6 +608,9 @@ function miniCard(t){
   return`<span class="mc" style="background:${bg};color:${col}">${ci.em} ${ci.name}</span>`;
 }
 
+// ================================================================
+//  DECK BUILDING
+// ================================================================
 function buildDeck(n){
   let d=[];
   d.push(...Array(4).fill(0).map(()=>mkCard('SKIP')));
@@ -602,15 +640,18 @@ function dealHands(n){
   });
 }
 
+// ================================================================
+//  HOST SETUP
+// ================================================================
 function goHostSetup(){goScreen('shs')}
 function goJoin(){goScreen('sjoin')}
 
 function startHost(){
   const tableName=document.getElementById('host-table-name').value.trim()||'Stół gry';
   isHost=true; myName=tableName; roomId=uid8();
-  notify('Łączenie z serwerem pokoi...','info');
+  notify('Łączenie z serwerem PeerJS...','info');
 
-  peer=new Peer(roomId, PEER_CONFIG);
+  peer=new Peer(roomId,{debug:0,config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]}});
 
   peer.on('open',id=>{
     myId=id;
@@ -628,13 +669,14 @@ function startHost(){
       peer.destroy();
       setTimeout(startHost,300);
     } else {
-      notify('Błąd sieci PeerJS: '+err.type,'err');
+      notify('Błąd PeerJS: '+err.type,'err');
     }
   });
 
   peer.on('disconnected',()=>{
     document.getElementById('h-dot').className='conn-dot wait';
     document.getElementById('h-conn-lbl').textContent='Reconnecting...';
+    notify('Utracono połączenie z serwerem sygnalizacyjnym','warn');
     setTimeout(()=>{try{peer.reconnect()}catch(e){}},2000);
   });
 }
@@ -644,7 +686,7 @@ function showPregame(){
   document.getElementById('pg-room-id').textContent=roomId;
   const joinUrl = window.location.origin + window.location.pathname + '?join=' + roomId;
   generateQR('pg-qr', joinUrl, 140);
-  document.getElementById('pg-link-val').value = joinUrl;
+  document.getElementById('pg-link-val').value = joinUrl; // Ta linijka wstawia link w pole
   updatePregame();
 }
 
@@ -652,30 +694,33 @@ function updatePregame(){
   if(!G)return;
   document.getElementById('pg-count').textContent=G.players.length;
   document.getElementById('pg-pl-list').innerHTML=G.players.map((p,i)=>`
-    <div class="pregame-pl" style="justify-content:space-between;">
-      <div style="display:flex;align-items:center;gap:10px;">
+    <div class="pregame-pl" style="justify-content: space-between;">
+      <div style="display:flex; align-items:center; gap:10px;">
         <div class="av" style="background:${p.color}">${p.emoji}</div>
         <span style="font-weight:700;font-size:.88rem">${p.name}</span>
       </div>
-      <button class="btn-danger" style="border:none;border-radius:6px;padding:6px 10px;font-size:.7rem;font-weight:bold;cursor:pointer;" onclick="kickPlayer('${p.peerId}')">Wyrzuć</button>
+      <button class="btn-danger" style="border:none; border-radius:6px; padding:6px 10px; font-size:.7rem; font-weight:bold; cursor:pointer;" onclick="kickPlayer('${p.peerId}')">Wyrzuć</button>
     </div>
   `).join('');
   const btn=document.getElementById('btn-start');
   btn.disabled=G.players.length<2;
   btn.textContent=G.players.length<2?'🃏 Rozpocznij (min. 2 graczy)':`🃏 Rozpocznij grę (${G.players.length} graczy)`;
 }
-
 function kickPlayer(peerId) {
   if (!G) return;
   const pIndex = G.players.findIndex(x => x.peerId === peerId);
   if (pIndex === -1) return;
+  
   const p = G.players[pIndex];
   const conn = hostConns[peerId];
+  
   if (conn) {
     try { conn.send({type: 'KICKED'}); } catch(e) {}
+    // Zamykamy połączenie po ułamku sekundy, żeby wiadomość zdążyła dojść
     setTimeout(() => { try { conn.close(); } catch(e) {} }, 300);
     delete hostConns[peerId];
   }
+  
   G.players.splice(pIndex, 1);
   updatePregame();
   bcast({type: 'LOBBY_UPDATE', players: G.players});
@@ -723,39 +768,49 @@ function hostMsg(conn,data){
   }
 }
 
-function hJoinRequest(conn,data){
+// ================================================================
+//  HOST: JOIN
+// ================================================================
+function hJoinRequest(conn, data){
   if(!G) return;
-  if(G.phase!=='lobby'){try{conn.send({type:'ERR',msg:'Gra już trwa.'})}catch(e){}return;}
+  if(G.phase !== 'lobby'){ conn.send({type:'ERR', msg:'Gra już trwa.'}); return; }
+  if(G.players.length >= 5){ conn.send({type:'ERR', msg:'Pokój pełny (max 5).'}); return; }
   
-  const pPeerId = data.peerId || conn.peer;
-  const existing = G.players.find(p => p.peerId === pPeerId);
-  
-  if (existing) {
-    hostConns[pPeerId] = conn;
-    try {
-      conn.send({type:'JOIN_OK',player:{id:existing.id,name:existing.name,color:existing.color,emoji:existing.emoji}});
-      conn.send({type:'LOBBY_UPDATE',players:G.players});
-    } catch(e){}
+  const existing = G.players.find(p => p.peerId === conn.peer);
+  if(existing) {
+    existing.name = data.name || existing.name;
+    hostConns[conn.peer] = conn;
+    conn.send({type:'JOIN_OK', player:{id:existing.id, name:existing.name, color:existing.color, emoji:existing.emoji}});
+    updatePregame();
+    bcast({type:'LOBBY_UPDATE', players:G.players});
     return;
   }
 
-  if(G.players.length>=5){try{conn.send({type:'ERR',msg:'Pokój pełny (max 5).'})}catch(e){}return;}
-  
-  const idx=G.players.length;
-  const p={id:'P'+idx+'_'+pPeerId.substr(0,5),peerId:pPeerId,name:data.name||('Gracz '+(idx+1)),hand:[],eliminated:false,color:COLORS[idx%COLORS.length],emoji:EMOJIS[idx%EMOJIS.length]};
-  G.players.push(p);
-  hostConns[pPeerId]=conn;
+  const idx = G.players.length;
+  const p = {
+    id: 'P' + idx + '_' + conn.peer.substr(0,5),
+    peerId: conn.peer,
+    name: data.name || ('Gracz ' + (idx + 1)),
+    hand: [],
+    eliminated: false,
+    color: COLORS[idx % COLORS.length],
+    emoji: EMOJIS[idx % EMOJIS.length]
+  };
 
-  try {
-    conn.send({type:'JOIN_OK',player:{id:p.id,name:p.name,color:p.color,emoji:p.emoji}});
-    conn.send({type:'LOBBY_UPDATE',players:G.players});
-  } catch(e){}
+  G.players.push(p);
+  hostConns[conn.peer] = conn;
   
-  bcast({type:'LOBBY_UPDATE',players:G.players}, pPeerId);
+  conn.send({type:'JOIN_OK', player:{id:p.id, name:p.name, color:p.color, emoji:p.emoji}});
+  conn.send({type:'LOBBY_UPDATE', players:G.players});
+  bcast({type:'LOBBY_UPDATE', players:G.players}, conn.peer);
+  
   updatePregame();
-  notify(p.name+' dołączył!','info');
+  notify(p.name + ' dołączył!', 'info');
 }
 
+// ================================================================
+//  HOST: START GAME
+// ================================================================
 function startGame(){
   if (G && G.players) {
     G.players = G.players.filter(p => hostConns[p.peerId]);
@@ -780,10 +835,13 @@ function startGame(){
   document.getElementById('h-room-id').textContent=roomId;
   const joinUrl = window.location.origin + window.location.pathname + '?join=' + roomId;
   generateQR('h-qr', joinUrl, 90);
-  document.getElementById('h-link-val').value = joinUrl;
+  document.getElementById('h-link-val').value = joinUrl; // Ta linijka wstawia link w pole
   renderHost();
 }
 
+// ================================================================
+//  HOST: GAME INFO BUILDER
+// ================================================================
 function mkInfo(forId){
   const cp=G.players[G.currentPlayerIndex];
   return{
@@ -813,6 +871,9 @@ function bcastState(){
   G.players.forEach(p=>sendTo(p.id,{type:'GAME_UPDATE',yourHand:p.hand,gameInfo:mkInfo(p.id)}));
 }
 
+// ================================================================
+//  HOST: CARD PLAY
+// ================================================================
 function curP(){return G.players[G.currentPlayerIndex]}
 function isCurP(id){return curP()?.id===id}
 
@@ -825,10 +886,12 @@ function hPlayCard(conn,data){
   const cards=cardIndices.map(i=>p.hand[i]).filter(Boolean);
   if(!cards.length)return;
 
+  // PAIR PLAY
   if(cards.length===2){
     if(!isCat(cards[0].type)||cards[0].type!==cards[1].type){
       conn.send({type:'ERR',msg:'Para musi być z identycznych kart kota.'});return;
     }
+    // Remove from hand
     [...cardIndices].sort((a,b)=>b-a).forEach(i=>p.hand.splice(i,1));
     G.discard.push(...cards);
     addLog(p.name+' zagrał parę '+CI(cards[0].type).em+' '+CI(cards[0].type).name,'imp');
@@ -844,6 +907,7 @@ function hPlayCard(conn,data){
     bcastState();return;
   }
 
+  // SINGLE CARD
   const card=cards[0];
   if (isCat(card.type)) {
     conn.send({type:'ERR',msg:'Karty kotów bez właściwości wymagają pary!'});return;
@@ -922,8 +986,10 @@ function execPairSteal(fromP,targetId){
   const card=target.hand.splice(ri,1)[0];
   fromP.hand.push(card);
   addLog(fromP.name+' ukradł kartę od '+target.name+'! ('+CI(card.type).em+')','imp');
+  
   sendTo(fromP.id,{type:'GOT_CARD',card,stolen:true});
   sendTo(target.id,{type:'LOST_CARD',card,thiefName:fromP.name});
+  
   G.pendingAction=null;
 }
 
@@ -934,6 +1000,9 @@ function hPairTarget(conn,data){
   bcastState();
 }
 
+// ================================================================
+//  HOST: DRAW CARD
+// ================================================================
 function hDrawCard(conn){
   const p=G.players.find(x=>x.peerId===conn.peer);
   if(!p||p.eliminated)return;
@@ -961,7 +1030,7 @@ function hDrawCard(conn){
       p.hand=[];
       addLog('💥 BOOM! '+p.name+' EKSPLODOWAŁ!','boom');
       setLastAction('💥💥 '+p.name+' EKSPLODOWAŁ! 💥💥');
-      notify('💥 '+p.name+' EKSPLODOWAŁ!','err',6000);
+      notify('💥 '+p.name+' EKSPLODOWAŁ!','err',5000);
       sendTo(p.id,{type:'YOU_EXPLODED'});
       checkWin();
       if(G.phase==='playing')advanceTurn();
@@ -974,6 +1043,9 @@ function hDrawCard(conn){
   }
 }
 
+// ================================================================
+//  HOST: DEFUSE PLACEMENT
+// ================================================================
 function hDefusePlace(conn,data){
   const p=G.players.find(x=>x.peerId===conn.peer);
   if(!p||G.pendingAction?.type!=='DEFUSE_PLACE'||G.pendingAction.playerId!==p.id)return;
@@ -991,6 +1063,9 @@ function hDefusePlace(conn,data){
   advanceTurn();bcastState();
 }
 
+// ================================================================
+//  HOST: TURN MANAGEMENT
+// ================================================================
 function advanceTurn(isAttack){
   const alive=G.players.filter(x=>!x.eliminated);
   if(alive.length<=1)return;
@@ -1016,6 +1091,9 @@ function advanceTurnIfCurrent(pid){
   if(curP()?.id===pid)advanceTurn();
 }
 
+// ================================================================
+//  HOST: WIN CHECK
+// ================================================================
 function checkWin(){
   const alive=G.players.filter(x=>!x.eliminated);
   if(alive.length===1){
@@ -1026,6 +1104,9 @@ function checkWin(){
   }
 }
 
+// ================================================================
+//  HOST: RENDERING
+// ================================================================
 function setLastAction(html){
   if(G) G.lastActionHtml = html;
   const el=document.getElementById('h-last-action');
@@ -1065,6 +1146,9 @@ function renderHost(){
   renderLog();
 }
 
+// ================================================================
+//  CLIENT: JOIN
+// ================================================================
 function joinGame(){
   const name=document.getElementById('join-name').value.trim();
   const code=document.getElementById('join-code').value.trim().toUpperCase().replace(/\s/g,'');
@@ -1078,54 +1162,33 @@ function initClient(hostId,name){
   goScreen('slb');
   document.getElementById('lb-name').textContent='Witaj, '+name+'!';
   document.getElementById('c-myname').textContent=name;
-  document.getElementById('lb-status').textContent='Nawiązywanie połączenia z Hostem...';
 
-  if (joinRetryTimer) clearInterval(joinRetryTimer);
-
-  peer=new Peer(PEER_CONFIG);
+  peer=new Peer({debug:0,config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]}});
 
   peer.on('open',id=>{
     myId=id;
     cConn=peer.connect(hostId,{reliable:true});
-
-    function trySendJoin() {
-      if (cConn && cConn.open) {
-        cConn.send({type:'JOIN_REQUEST', name, peerId: id});
-      }
-    }
-
     cConn.on('open',()=>{
-      setConnDot('c','ok','Połączono');
-      document.getElementById('lb-status').textContent='Dołączanie do poczekalni...';
-      trySendJoin();
-      joinRetryTimer = setInterval(trySendJoin, 700);
+      setConnDot('c','ok','OK');
+      cConn.send({type:'JOIN_REQUEST',name});
     });
-
-    cConn.on('data',data=>{
-      if(data.type === 'JOIN_OK' || data.type === 'LOBBY_UPDATE') {
-        if(joinRetryTimer) clearInterval(joinRetryTimer);
-        document.getElementById('lb-status').textContent='Host zaraz rozpocznie grę...';
-      }
-      clientMsg(data);
-    });
-
+    cConn.on('data',data=>clientMsg(data));
     cConn.on('close',()=>{
-      if(joinRetryTimer) clearInterval(joinRetryTimer);
       setConnDot('c','bad','Offline');
-      notify('Połączenie z hostem zostało zerwane!','err',6000);
+      notify('Połączenie z hostem zerwane!','err',8000);
     });
-    cConn.on('error',err=>console.error('Błąd cConn:',err));
+    cConn.on('error',err=>{console.error(err);notify('Błąd: '+err,'err')});
   });
 
   peer.on('error',err=>{
-    console.error('Błąd peer:', err);
-    if(joinRetryTimer) clearInterval(joinRetryTimer);
-    if(err.type==='peer-unavailable'){notify('Nie znaleziono pokoju o kodzie: '+hostId,'err',6000);goScreen('sjoin')}
-    else notify('Błąd sieci PeerJS: '+err.type,'err');
+    console.error(err);
+    if(err.type==='peer-unavailable'){notify('Nie znaleziono pokoju: '+hostId,'err');goScreen('sjoin')}
+    else notify('Błąd PeerJS: '+err.type,'err');
   });
 
   peer.on('disconnected',()=>{
     setConnDot('c','wait','Łączenie...');
+    notify('Rozłączono, próbuję ponownie...','warn');
     setTimeout(()=>{try{peer.reconnect()}catch(e){}},2000);
   });
 }
@@ -1136,14 +1199,14 @@ function setConnDot(prefix,cls,lbl){
   if(l)l.textContent=lbl;
 }
 
+// ================================================================
+//  CLIENT: MESSAGE HANDLING
+// ================================================================
 function clientMsg(data){
   if(!data?.type)return;
   switch(data.type){
     case 'ERR':               notify('❌ '+data.msg,'err');break;
-    case 'JOIN_OK':           
-      myId=data.player.id;
-      document.getElementById('c-room').textContent='Pokój: '+data.player.name;
-      break;
+    case 'JOIN_OK':           myId=data.player.id;document.getElementById('c-room').textContent='Pokój: '+data.player.name;break;
     case 'LOBBY_UPDATE':      updateLobby(data.players);break;
     case 'GAME_START':        
       closeModal('m-over');
@@ -1156,13 +1219,13 @@ function clientMsg(data){
     case 'CHOOSE_FAVOR_TARGET':showFavorTargetModal(data.players);break;
     case 'GIVE_CARD_REQ':     showGiveCardModal(data.fromName,data.fromId);break;
     case 'CHOOSE_PAIR_TARGET': showPairTargetModal(data.players);break;
-    case 'GOT_CARD':          notify((data.stolen?'🎉 Ukradłeś: ':'📬 Dostałeś: ')+CI(data.card.type).em+' '+CI(data.card.type).name,'info',6000);break;
-    case 'LOST_CARD':         notify('😱 ' + data.thiefName + ' ukradł Ci: ' + CI(data.card.type).em + ' ' + CI(data.card.type).name, 'warn', 6000); break;
+    case 'GOT_CARD':          notify((data.stolen?'🎉 Ukradłeś: ':'📬 Dostałeś: ')+CI(data.card.type).em+' '+CI(data.card.type).name,'info');break;
+    case 'LOST_CARD':         notify('😱 ' + data.thiefName + ' ukradł Ci: ' + CI(data.card.type).em + ' ' + CI(data.card.type).name, 'warn'); break;
     case 'KICKED':            
-      notify('Zostałeś wyrzucony z pokoju przez Hosta.', 'err', 5000);
-      if (cConn) cConn.close();
-      goScreen('sl');
-      break;
+        notify('Zostałeś wyrzucony z pokoju przez Hosta.', 'err', 5000);
+        if (cConn) cConn.close();
+        goScreen('sl'); // Przekierowanie do ekranu głównego
+        break;
     case 'GAME_OVER':         {const w=data.winner;w.id===myId?showWinOverlay(w):showLossModal(w);break;}
   }
 }
@@ -1177,6 +1240,9 @@ function updateLobby(players){
   `).join('');
 }
 
+// ================================================================
+//  CLIENT: RENDERING
+// ================================================================
 function renderClient(){
   if(!cInfo)return;
   const meId=cInfo.myId||myId;
@@ -1185,6 +1251,7 @@ function renderClient(){
   const isDead=meInfo?.eliminated;
   const isEnded=cInfo.phase==='ended';
 
+  // Banner
   const bn=document.getElementById('c-banner');
   if(isDead){bn.className='turn-banner tb-dead';bn.textContent='💀 Eksplodowałeś! Obserwuj grę.'}
   else if(isEnded){bn.className='turn-banner tb-won';bn.textContent='🏆 Koniec! Wygrał: '+(cInfo.winner?.name||'?')}
@@ -1196,6 +1263,7 @@ function renderClient(){
     bn.textContent='⏳ Tura gracza: '+(cInfo.currentPlayerName||'?');
   }
 
+  // Chips
   document.getElementById('c-deck').textContent=cInfo.deckCount??'?';
   document.getElementById('c-cur-pl').textContent=cInfo.currentPlayerName||'?';
   document.getElementById('c-alive').textContent=(cInfo.players||[]).filter(p=>!p.eliminated).length;
@@ -1203,6 +1271,7 @@ function renderClient(){
   if(cInfo.attackTurns>0&&isMyTurn){atkChip.style.display='';document.getElementById('c-atk-cnt').textContent=cInfo.attackTurns}
   else atkChip.style.display='none';
 
+  // Other players
   document.getElementById('c-others').innerHTML=(cInfo.players||[]).filter(p=>p.id!==meId).map(p=>`
     <div class="opc ${cInfo.currentPlayerId===p.id?'cur':''} ${p.eliminated?'dead':''}">
       <div class="opc-av" style="background:${p.color}">${p.emoji}</div>
@@ -1211,15 +1280,17 @@ function renderClient(){
     </div>
   `).join('');
   
+  // Last Action
   const cLast = document.getElementById('c-last-action');
   if (cLast) {
     if (cInfo.lastActionHtml) {
-      cLast.innerHTML = `<div style="font-size:.85rem;font-weight:700;line-height:1.2;display:flex;align-items:center;justify-content:center;height:100%;text-align:center;">${cInfo.lastActionHtml}</div>`;
+      cLast.innerHTML = `<div style="font-size:.9rem;font-weight:700;line-height:1.2;display:flex;align-items:center;justify-content:center;height:100%;text-align:center;">${cInfo.lastActionHtml}</div>`;
     } else {
       cLast.innerHTML = `<span style="color:var(--muted);display:flex;align-items:center;justify-content:center;height:100%;">Gra się zaczyna...</span>`;
     }
   }
 
+  // Hand
   const hc=document.getElementById('c-hand');
   document.getElementById('c-hand-cnt').textContent=cHand.length;
   if(!cHand.length){
@@ -1227,7 +1298,7 @@ function renderClient(){
   } else {
     hc.innerHTML=cHand.map((card,i)=>{
       const ci=CI(card.type),sel=selIdx.includes(i);
-      return`<div class="card c-${card.type} ${sel?'sel':''}" onclick="toggleSel(${i})">
+      return`<div class="card c-${card.type} ${sel?'sel':''}" onclick="toggleSel(${i})" onmouseenter="showCardTip(this,'${card.type}')" onmouseleave="hideCardTip(this)" ontouchstart="touchTipStart(this,'${card.type}')" ontouchend="touchTipEnd(this)">
         <div class="card-em">${ci.em}</div>
         <div class="card-nm">${ci.name}</div>
         <div class="card-desc">${ci.desc}</div>
@@ -1235,6 +1306,7 @@ function renderClient(){
     }).join('');
   }
 
+  // Hints & Play Button Validation
   const sh=document.getElementById('c-sel-hint');
   sh.textContent=selIdx.length?selIdx.length+' zaznaczono':'';
   const hh=document.getElementById('c-hand-hint');
@@ -1266,6 +1338,7 @@ function renderClient(){
     hh.textContent = 'Dotknij karty, by ją zaznaczyć.';
   }
 
+  // Buttons state update
   document.getElementById('btn-draw').disabled=!canAct;
   document.getElementById('btn-play').disabled=playDisabled;
 }
@@ -1289,6 +1362,9 @@ function toggleSel(i){
   renderClient();
 }
 
+// ================================================================
+//  CLIENT: ACTIONS
+// ================================================================
 function clientDraw() {
   if (cConn && cConn.open) {
     cConn.send({ type: 'DRAW_CARD' });
@@ -1320,6 +1396,9 @@ function clientPlayCards(){
   selIdx=[];renderClient();
 }
 
+// ================================================================
+//  MODALS
+// ================================================================
 function closeModal(id){const el=document.getElementById(id);if(el)el.remove()}
 function mkModal(id,inner){
   const ex=document.getElementById(id);if(ex)ex.remove();
@@ -1410,7 +1489,7 @@ function sendGiveCard(idx){
   const ci = CI(card.type);
   cConn.send({type:'FAVOR_GIVE',cardIndex:idx});
   closeModal('m-give');
-  notify('Oddałeś kartę: ' + ci.em + ' ' + ci.name, 'info', 6000);
+  notify('Oddałeś kartę: ' + ci.em + ' ' + ci.name, 'info');
 }
 
 function showPairTargetModal(players){
@@ -1428,6 +1507,9 @@ function sendPairTarget(id,name){
   selIdx=[];closeModal('m-pair');notify('Kradujesz kartę od '+name+'...','info');renderClient();
 }
 
+// ================================================================
+//  WIN / LOSS
+// ================================================================
 function showWinOverlay(winner){
   const d=document.createElement('div');d.className='winner-overlay';
   d.innerHTML=`<div class="win-em">🏆</div>
@@ -1453,6 +1535,36 @@ function requestRestart() {
   }
 }
 
+// ================================================================
+//  CARD TOOLTIP
+// ================================================================
+let tipTimer=null;
+function showCardTip(el,type){
+  hideCardTip(el);
+  const ci=CI(type);
+  const tip=document.createElement('div');
+  tip.className='card-tooltip';
+  tip.innerHTML=`<strong>${ci.em} ${ci.name}</strong><br>${ci.desc}`;
+  el.style.overflow='visible';
+  el.appendChild(tip);
+}
+function hideCardTip(el){
+  const t=el?.querySelector('.card-tooltip');
+  if(t)t.remove();
+  if(el)el.style.overflow='hidden';
+  clearTimeout(tipTimer);
+}
+function touchTipStart(el,type){
+  tipTimer=setTimeout(()=>showCardTip(el,type),500);
+}
+function touchTipEnd(el){
+  clearTimeout(tipTimer);
+  setTimeout(()=>hideCardTip(el),1800);
+}
+
+// ================================================================
+//  URL PARAM
+// ================================================================
 window.addEventListener('DOMContentLoaded',()=>{
   const p=new URLSearchParams(location.search);
   const j=p.get('join');
