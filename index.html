@@ -728,9 +728,6 @@ function kickPlayer(peerId) {
 }
 
 function hostOnConn(conn){
-  conn.on('open', () => {
-    conn.on('data', data => hostMsg(conn, data));
-  });
   conn.on('data', data => hostMsg(conn, data));
   conn.on('close', () => hostOnClose(conn));
   conn.on('error', err => console.error('conn err', err));
