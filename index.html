@@ -536,7 +536,7 @@ function uid8(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='EK-';for(let i
 function shuf(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
 function mkCard(t){return{type:t,id:t+'_'+Math.random().toString(36).substr(2,7)}}
 function goScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
-function notify(msg,type='info',dur=3500){
+function notify(msg,type='info',dur=5000){
   const c=document.getElementById('nc');
   const el=document.createElement('div');
   el.className='notif n-'+type;el.textContent=msg;c.appendChild(el);
@@ -896,7 +896,10 @@ function execPairSteal(fromP,targetId){
   const card=target.hand.splice(ri,1)[0];
   fromP.hand.push(card);
   addLog(fromP.name+' ukradł kartę od '+target.name+'! ('+CI(card.type).em+')','imp');
+  
   sendTo(fromP.id,{type:'GOT_CARD',card,stolen:true});
+  sendTo(target.id,{type:'LOST_CARD',card,thiefName:fromP.name});
+  
   G.pendingAction=null;
 }
 
@@ -1127,6 +1130,7 @@ function clientMsg(data){
     case 'GIVE_CARD_REQ':     showGiveCardModal(data.fromName,data.fromId);break;
     case 'CHOOSE_PAIR_TARGET': showPairTargetModal(data.players);break;
     case 'GOT_CARD':          notify((data.stolen?'🎉 Ukradłeś: ':'📬 Dostałeś: ')+CI(data.card.type).em+' '+CI(data.card.type).name,'info');break;
+    case 'LOST_CARD':         notify('😱 ' + data.thiefName + ' ukradł Ci: ' + CI(data.card.type).em + ' ' + CI(data.card.type).name, 'warn'); break;
     case 'GAME_OVER':         {const w=data.winner;w.id===myId?showWinOverlay(w):showLossModal(w);break;}
   }
 }
@@ -1385,7 +1389,12 @@ function showGiveCardModal(fromName){
   `);
 }
 function sendGiveCard(idx){
-  if(!cConn)return;cConn.send({type:'FAVOR_GIVE',cardIndex:idx});closeModal('m-give');notify('Oddałeś kartę!','info');
+  if(!cConn)return;
+  const card = cHand[idx];
+  const ci = CI(card.type);
+  cConn.send({type:'FAVOR_GIVE',cardIndex:idx});
+  closeModal('m-give');
+  notify('Oddałeś kartę: ' + ci.em + ' ' + ci.name, 'info');
 }
 
 function showPairTargetModal(players){
